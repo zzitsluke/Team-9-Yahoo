@@ -1,39 +1,86 @@
+import dash
+from dash import dcc, html
 import yfinance as yf
-import matplotlib.pyplot as plt
-import matplotlib.dates as mdates
+import plotly.graph_objects as go
 
-##call data from yfinance
+# Fetch NVDA data
 nvda = yf.Ticker("NVDA")
-Df = nvda.history(period = "3y")
+df = nvda.history(period="3y")
 
-##build data into 30 day moving volatility, method found from research on Youtube
-Df["percent_change"] = Df["Close"].pct_change()
-Df["Volatility30"]=Df["percent_change"].rolling(30).std() * 100
+# Compute 30-day volatility
+df["percent_change"] = df["Close"].pct_change()
+df["Volatility30"] = df["percent_change"].rolling(30).std() * 100
 
-##Build Plot and Display
-#Brainstormed ChatGpt for help using matplot to edit axis
-COLOR_Price = "#3399e6"
-COLOR_Vol = "#FF0000"
+# Get start and end date for display
+start_date = df.index.min().strftime("%Y-%m-%d")
+end_date = df.index.max().strftime("%Y-%m-%d")
 
-fig, ax1 = plt.subplots(figsize=(10,6))
-ax1.plot(Df["Close"], label = "Price ($)", color = COLOR_Price)
-ax1.set_ylabel("Price($)", color = COLOR_Price)
-ax1.set_title("3 Year Price vs Volatility for NVDA")
+# Create Plotly figure with two y-axes
+fig = go.Figure()
 
-ax2 = ax1.twinx()
-ax2.plot(Df["Volatility30"], label = "30 Day Volatility (%)", linestyle = "--", color = COLOR_Vol)
-ax2.set_ylabel("30 Day Volatility(%)", color = COLOR_Vol)
+# Price line (left y-axis)
+fig.add_trace(go.Scatter(
+    x=df.index, y=df["Close"],
+    name="Price ($)", line=dict(color="#3399e6")
+))
 
-ax1.xaxis.set_major_locator(mdates.MonthLocator(interval=3))    
-ax1.xaxis.set_major_formatter(mdates.DateFormatter("%b %Y"))
+# Volatility line (right y-axis)
+fig.add_trace(go.Scatter(
+    x=df.index, y=df["Volatility30"],
+    name="30 Day Volatility (%)",
+    line=dict(color="#FF0000", dash="dash"),
+    yaxis="y2"
+))
 
-#legend
-lines, labels = ax1.get_legend_handles_labels()
-lines2, labels2 = ax2.get_legend_handles_labels()
-ax1.legend(lines + lines2, labels + labels2, loc="upper left")
+# Layout with dual y-axis
+fig.update_layout(
+    title="3 Year Price vs Volatility for NVDA",
+    xaxis=dict(
+        tickformat="%b %Y",
+        tickangle=45
+    ),
+    yaxis=dict(
+        title="Price ($)",
+        color="#3399e6"
+    ),
+    yaxis2=dict(
+        title="30 Day Volatility (%)",
+        overlaying="y",
+        side="right",
+        color="#FF0000"
+    ),
+    legend=dict(x=0.01, y=0.99, bordercolor="gray", borderwidth=1)
+)
 
-#Rotate X Axis for Clarity
-plt.setp(ax1.get_xticklabels(), rotation=45, ha="right")
+# Dash app
+app = dash.Dash(__name__)
 
-plt.tight_layout()
-plt.show()
+app.layout = html.Div(id="main-container", children=[
+
+    # Title
+    html.Div(id="title-div", children=[
+        html.H1("Dashboard Title")
+    ]),
+
+    # Content row
+    html.Div(id="content-div", style={"display": "flex"}, children=[
+
+        # Sidebar
+        html.Div(id="sidebar-div", style={"flex": "1"}, children=[
+            html.Div(id="year-div", children=[
+                html.Label(f"Date Range: {start_date} → {end_date}")
+            ]),
+            html.Div(id="analysis-div", children=[
+                html.Label("Graph Analysis (to be written later)")
+            ])
+        ]),
+
+        # Graph
+        html.Div(id="graph-div", style={"flex": "3"}, children=[
+            dcc.Graph(id="main-graph", figure=fig)
+        ])
+    ])
+])
+
+if __name__ == "__main__":
+    app.run_server(debug=True)
