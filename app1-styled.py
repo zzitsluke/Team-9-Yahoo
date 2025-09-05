@@ -1,4 +1,15 @@
-# No AI was used
+# Team 9 - MSBA Session 2
+# Vanessa Broadrup, Luke Kovats, Suyog Mainali, Bryce Marin
+
+# Question/Story: What are you trying to show and why?
+# In CTBA class, we have recently been examining the relationships between business and AI–as well as how advancements in AI affect business and business operations. For this assignment, we wanted to take advantage of the opportunity to look at financial data in order to investigate how a company like NVIDIA, which has demonstrated substantial growth in the AI sphere, performs in the stock market over a period of three years. NVDA has been a very volatile stock over the past 3 years. By examining the relationships between stock price and volatility, we aim to get an idea of the risk of owning NVDA over time.
+
+# Data Choices: Which tickers/series and time span, and why?
+# On the y axis on the left side, we measured stock price. On the right, we measured percent volatility, and on the x axis, we took note of January and July of each year from 2023-2025. On the dash, a user can hover over the graph for more specific date information.
+
+# Takeaway (2–3 sentences): What should a reader notice?
+# The reader should notice that when there is a sudden uptick in price on the graph, there tends to also be a sudden increase in volatility. When prices tend to stabilize, volatility tends to go down. 
+
 import dash
 from dash import dcc, html, Input, Output
 import dash_bootstrap_components as dbc
