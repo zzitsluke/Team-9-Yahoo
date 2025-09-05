@@ -76,9 +76,24 @@ app.layout = html.Div(id="main-container", children=[
         ]),
 
         # Graph
-        html.Div(id="graph-div", style={"flex": "3"}, children=[
-            dcc.Graph(id="main-graph", figure=fig)
-        ])
+        html.Div(
+            id="graph-div",
+            style={"flex": "3"},
+            children=[
+                dcc.Graph(id="main-graph", figure=fig),
+                html.Div(
+                    "Source: Yahoo Finance (yfinance)",
+                    style={
+                        "fontSize": "12px",
+                        "color": "gray",
+                        "marginTop": "10px",
+                        "textAlign": "center",
+                        "fontStyle": "italic"
+                    }
+                )
+            ]
+        )
+
     ])
 ])
 
