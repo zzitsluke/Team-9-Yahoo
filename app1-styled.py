@@ -10,6 +10,12 @@
 # Takeaway (2–3 sentences): What should a reader notice?
 # The reader should notice that when there is a sudden uptick in price on the graph, there tends to also be a sudden increase in volatility. When prices tend to stabilize, volatility tends to go down. 
 
+# Sources
+# https://python-graph-gallery.com/line-chart-dual-y-axis-with-matplotlib/
+# https://www.reddit.com/r/econometrics/comments/12zh95u/calculate_30days_volatility_using_python/
+# https://www.youtube.com/watch?v=nfJ1Ou0vonE
+# AI was used to help edit axis 
+
 import dash
 from dash import dcc, html, Input, Output
 import dash_bootstrap_components as dbc
